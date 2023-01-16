@@ -50,15 +50,15 @@ const generateGame = () => {
         throw new Error("The dimension of the board must be an even number.")
     }
 
-    const emojis = ['🥔', '🍒', '🥑', '🌽', '🥕', '🍇', '🍉', '🍌', '🥭', '🍍']
-    const picks = pickRandom(emojis, (dimensions * dimensions) / 2) 
+    const files = ['1.jpg', '2.jpg', '3.jpg', '4.jpg', '5.jpg', '6.jpg', '7.jpg', '8.jpg']
+    const picks = pickRandom(files, (dimensions * dimensions) / 2) 
     const items = shuffle([...picks, ...picks])
     const cards = `
         <div class="board" style="grid-template-columns: repeat(${dimensions}, auto)">
             ${items.map(item => `
-                <div class="card">
+                <div class="card" id=${item}>
                     <div class="card-front"></div>
-                    <div class="card-back">${item}</div>
+                    <div class="card-back"><img src="assets/images/${item}" height=150 width=150/></div>
                 </div>
             `).join('')}
        </div>
@@ -76,8 +76,8 @@ const startGame = () => {
     state.loop = setInterval(() => {
         state.totalTime++
 
-        selectors.moves.innerText = `${state.totalFlips} moves`
-        selectors.timer.innerText = `time: ${state.totalTime} sec`
+        selectors.moves.innerText = `${state.totalFlips} movimentos`
+        selectors.timer.innerText = `tempo: ${state.totalTime} s`
     }, 1000)
 }
 
@@ -104,7 +104,7 @@ const flipCard = card => {
     if (state.flippedCards === 2) {
         const flippedCards = document.querySelectorAll('.flipped:not(.matched)')
 
-        if (flippedCards[0].innerText === flippedCards[1].innerText) {
+        if (flippedCards[0].id === flippedCards[1].id) {
             flippedCards[0].classList.add('matched')
             flippedCards[1].classList.add('matched')
         }
@@ -120,9 +120,9 @@ const flipCard = card => {
             selectors.boardContainer.classList.add('flipped')
             selectors.win.innerHTML = `
                 <span class="win-text">
-                    You won!<br />
-                    with <span class="highlight">${state.totalFlips}</span> moves<br />
-                    under <span class="highlight">${state.totalTime}</span> seconds
+                    Voce ganhou!<br />
+                    com <span class="highlight">${state.totalFlips}</span> movimentos<br />
+                    e menos de <span class="highlight">${state.totalTime}</span> segundos
                 </span>
             `
 
